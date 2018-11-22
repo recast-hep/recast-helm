@@ -1,0 +1,61 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: infra-db
+  labels:
+    component: infra
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: infra-db
+        component: infra
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:10
+        {{ if .Values.ContainerDetails.postgresRoot }}
+        securityContext:
+          runAsUser: 0
+        {{ end }}
+        volumeMounts:
+          - name: data
+            mountPath: /pgdata
+            subPath: backenddbdata
+        env:
+          - name: PGDATA
+            value: /pgdata
+        ports:
+          - containerPort: 5432
+            name: postgres
+      - name: pgweb
+        image: sosedoff/pgweb
+        ports:
+          - containerPort: 8081
+            name: pgweg
+        env:
+          - name: DATABASE_URL
+            value: postgres://postgres:postgres@localhost:5432
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Values.infraclaim }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: infra-db
+  labels:
+    component: infra
+spec:
+  type: {{ .Values.InternalServiceType }}
+  ports:
+  - port: 5432
+    targetPort: 5432
+    name: postgres
+  - port: 8081
+    targetPort: 8081
+    name: pgweb
+  selector:
+    app: infra-db

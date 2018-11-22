@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: infra-msg-queue
+  labels:
+    component: infra
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: infra-msg-queue
+        component: infra
+    spec:
+      containers:
+      - name: redis
+        image: redis:3
+        {{ if eq .Values.ContainerDetails.redisRoot true }}
+        securityContext:
+          runAsUser: 0
+        command: ['redis-server']
+        {{ else }}
+        command: ['docker-entrypoint.sh','redis-server']
+        {{ end }}
+        volumeMounts:
+          - name: data
+            mountPath: /data
+            subPath: redisdata
+            readOnly: false
+        ports:
+          - containerPort: 6379
+            name: redis
+        {{ if eq .Values.ResourceRequirements true}}
+        resources:
+          requests:
+            memory: "5Gi"
+        {{ end }}
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Values.infraclaim }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: infra-msg-queue
+  labels:
+    component: infra
+spec:
+  type: {{ .Values.InternalServiceType }}
+  ports:
+  - port: 6379
+    targetPort: 6379
+    nodePort: 32100
+    name: redis
+  selector:
+    app: infra-msg-queue

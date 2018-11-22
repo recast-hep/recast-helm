@@ -1,0 +1,145 @@
+{{ if eq .Values.Storage.Type "cephfs"}}
+apiVersion: v1
+data:
+  key: {{ .Values.Storage.CephFS.AuthKey | b64enc}}
+kind: Secret
+metadata:
+  name: ceph-secret
+  labels:
+    component: infra
+    target: infra
+type: Opaque
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: recast-cluster-pv-infra
+  labels:
+    component: infra
+    target: infra
+spec:
+  capacity:
+    storage: {{ .Values.Storage.InfraSize }}
+  accessModes:
+  - "ReadWriteMany"
+  cephfs:
+    monitors:
+    {{- range .Values.Storage.CephFS.Monitors }}
+    - {{ . | quote }}
+    {{- end }}
+    user: {{ .Values.Storage.CephFS.User }}
+    secretRef:
+      name: ceph-secret
+    path: {{ .Values.Storage.CephFS.Path }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: recast-cluster-pv-wflowworker
+  labels:
+    component: infra
+    target: wflowworker
+spec:
+  capacity:
+    storage: {{ .Values.Storage.WorkerSize }}
+  accessModes:
+  - "ReadWriteMany"
+  cephfs:
+    monitors:
+    {{- range .Values.Storage.CephFS.Monitors }}
+    - {{ . | quote }}
+    {{- end }}
+    user: {{ .Values.Storage.CephFS.User }}
+    secretRef:
+      name: ceph-secret
+    path: {{ .Values.Storage.CephFS.Path }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: recast-cluster-pv-wflowserver
+  labels:
+    component: infra
+    target: wflowserver
+spec:
+  capacity:
+    storage: {{ .Values.Storage.WorkflowSvcSize }}
+  accessModes:
+  - "ReadWriteMany"
+  cephfs:
+    monitors:
+    {{- range .Values.Storage.CephFS.Monitors }}
+    - {{ . | quote }}
+    {{- end }}
+    user: {{ .Values.Storage.CephFS.User }}
+    secretRef:
+      name: ceph-secret
+    path: {{ .Values.Storage.CephFS.Path }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: recast-cluster-pv-yadagesvc
+  labels:
+    component: infra
+    target: yadagesvc
+spec:
+  capacity:
+    storage: {{ .Values.Storage.YadageSvcSize }}
+  accessModes:
+  - "ReadWriteMany"
+  cephfs:
+    monitors:
+    {{- range .Values.Storage.CephFS.Monitors }}
+    - {{ . | quote }}
+    {{- end }}
+    user: {{ .Values.Storage.CephFS.User }}
+    secretRef:
+      name: ceph-secret
+    path: {{ .Values.Storage.CephFS.Path }}
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: recast-cluster-pv-cc
+  labels:
+    component: infra
+    target: recast-control-center
+spec:
+  capacity:
+    storage: {{ .Values.Storage.CCSize }}
+  accessModes:
+  - "ReadWriteMany"
+  cephfs:
+    monitors:
+    {{- range .Values.Storage.CephFS.Monitors }}
+    - {{ . | quote }}
+    {{- end }}
+    user: {{ .Values.Storage.CephFS.User }}
+    secretRef:
+      name: ceph-secret
+    path: {{ .Values.Storage.CephFS.Path }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: recast-cluster-pv-frontend
+  labels:
+    component: infra
+    target: recast-frontend
+spec:
+  capacity:
+    storage: {{ .Values.Storage.FrontendSize }}
+  accessModes:
+  - "ReadWriteMany"
+  cephfs:
+    monitors:
+    {{- range .Values.Storage.CephFS.Monitors }}
+    - {{ . | quote }}
+    {{- end }}
+    user: {{ .Values.Storage.CephFS.User }}
+    secretRef:
+      name: ceph-secret
+    path: {{ .Values.Storage.CephFS.Path }}
+{{ end }}
