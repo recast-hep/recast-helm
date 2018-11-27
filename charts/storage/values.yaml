@@ -1,0 +1,8 @@
+Storage:
+  StorageClass: shared
+  CCSize: 0.1Gi
+  WorkerSize: 0.1Gi
+  FrontendSize: 0.1Gi
+  InfraSize: 0.1Gi
+  WorkflowSvcSize: 0.1Gi
+  YadageSvcSize: 0.1Gi

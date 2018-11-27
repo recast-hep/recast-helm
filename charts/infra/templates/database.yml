@@ -1,16 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: infra-db
-  labels:
-    component: infra
+  name: {{ .Release.Name }}-infra-db
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: infra-db
-        component: infra
+        app: {{ .Release.Name }}-infra-db
     spec:
       containers:
       - name: postgres
@@ -40,14 +37,12 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: {{ .Values.infraclaim }}
+          claimName: {{ .Values.storage_release }}-infra-data
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: infra-db
-  labels:
-    component: infra
+  name: {{ .Release.Name }}-infra-db
 spec:
   type: {{ .Values.InternalServiceType }}
   ports:
@@ -58,4 +53,4 @@ spec:
     targetPort: 8081
     name: pgweb
   selector:
-    app: infra-db
+    app: {{ .Release.Name }}-infra-db

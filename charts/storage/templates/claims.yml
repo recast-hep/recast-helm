@@ -1,101 +1,83 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: infra-data
+  name: {{ .Release.Name }}-infra-data
   labels:
     component: infra
 spec:
-  storageClassName: ""
+  storageClassName: {{ .Values.Storage.StorageClass }}
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.Storage.InfraSize }}
-  selector:
-    matchLabels:
-      target: infra
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: wflowworker-data
+  name: {{ .Release.Name }}-wflowworker-data
   labels:
     component: infra
 spec:
-  storageClassName: ""
+  storageClassName: {{ .Values.Storage.StorageClass }}
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.Storage.WorkerSize }}
-  selector:
-    matchLabels:
-      target: wflowworker
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: wflowserver-data
+  name: {{ .Release.Name }}-wflowserver-data
   labels:
     component: infra
 spec:
-  storageClassName: ""
+  storageClassName: {{ .Values.Storage.StorageClass }}
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.Storage.WorkflowSvcSize }}
-  selector:
-    matchLabels:
-      target: wflowserver
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: yadagesvc-data
+  name: {{ .Release.Name }}-yadagesvc-data
   labels:
     component: infra
 spec:
-  storageClassName: ""
+  storageClassName: {{ .Values.Storage.StorageClass }}
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.Storage.YadageSvcSize }}
-  selector:
-    matchLabels:
-      target: yadagesvc
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: control-center-data
+  name: {{ .Release.Name }}-control-center-data
   labels:
     component: infra
 spec:
-  storageClassName: ""
+  storageClassName: {{ .Values.Storage.StorageClass }}
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.Storage.CCSize }}
-  selector:
-    matchLabels:
-      target: recast-control-center
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: frontend-data
+  name: {{ .Release.Name }}-frontend-data
   labels:
     component: infra
 spec:
-  storageClassName: ""
+  storageClassName: {{ .Values.Storage.StorageClass }}
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.Storage.FrontendSize }}
-  selector:
-    matchLabels:
-      target: recast-frontend

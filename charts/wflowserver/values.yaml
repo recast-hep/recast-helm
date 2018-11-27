@@ -1,0 +1,32 @@
+CERNGitLab:
+  User: mycernuser
+  Password: mycernpassword
+DNS:
+  interactive_host: wflow-int
+HostOverlays: false
+ImagePullPolicy: Always
+ImageTags:
+  wflow_server: git-master
+  wflow_logging: git-master
+  worker: git-master
+InternalServiceType: ClusterIP
+RestrictEngineNodes: false
+ResourceRequirements: false
+files:
+  getkrb_sh: aGVsbG8=
+  getmyproxy_sh: aGVsbG8=
+  grid_crt: aGVsbG8=
+  grid_key: aGVsbG8=
+  krb_keytab: aGVsbG8=
+  shiptarget_id_rsa: dummyvalue_should_be_base64_file_content
+  shiptarget_id_rsa_pub: dummyvalue_should_be_base64_file_content
+grid_pw: grid_pw
+wflowserver:
+  wflowslots: 10
+yadage_load_token: yadage_load_token
+infra:
+  msg_queue: infra-msg-queue.default.svc.cluster.local
+  database: infra-db.default.svc.cluster.local
+wflowserverclaim: wflowserver-data
+wflowworkerclaim: wflowworker-data
+data_download_token: data_download_token

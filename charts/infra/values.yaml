@@ -1,0 +1,3 @@
+ContainerDetails:
+  redisRoot: false
+  postgresRoot: false
